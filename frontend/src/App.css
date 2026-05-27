@@ -1,0 +1,10 @@
+.App {
+  font-family: sans-serif;
+  padding: 2rem;
+}
+.card {
+  background: #f8f8f8;
+  border-radius: 8px;
+  padding: 1rem;
+  margin: 1rem 0;
+}
