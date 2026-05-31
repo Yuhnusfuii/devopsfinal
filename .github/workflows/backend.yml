@@ -19,5 +19,6 @@ jobs:
           script: |
             cd /var/www/food-landing/backend
             git pull origin main
+            docker compose up -d
             go build -o server
             sudo systemctl restart food-backend

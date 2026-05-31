@@ -17,15 +17,43 @@ type Dish struct {
 }
 
 func main() {
-	db, err := sql.Open("postgres", os.Getenv("DATABASE_URL"))
+	dbUrl := os.Getenv("DATABASE_URL")
+	if dbUrl == "" {
+		dbUrl = "postgresql://neondb_owner:npg_OJhbeoAUL3z1@ep-winter-hat-apac7jra.c-7.us-east-1.aws.neon.tech/neondb?sslmode=require"
+	}
+	
+	log.Println("Đang kết nối tới DB bằng chuỗi:", dbUrl)
+	
+	db, err := sql.Open("postgres", dbUrl)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("Lỗi mở kết nối:", err)
 	}
 	defer db.Close()
 
+	err = db.Ping()
+	if err != nil {
+		log.Println("CẢNH BÁO: Không thể PING tới Database! Lỗi:", err)
+	} else {
+		log.Println("✅ Đã kết nối thành công tới PostgreSQL!")
+	}
+
+	http.HandleFunc("/api/health", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		err := db.Ping()
+		if err != nil {
+			http.Error(w, "Database Connection Failed: "+err.Error(), 500)
+			return
+		}
+		w.Write([]byte("Database Connected Successfully!"))
+	})
+
 	http.HandleFunc("/api/dishes", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Content-Type", "application/json")
+
 		rows, err := db.Query("SELECT id, name, description FROM dishes")
 		if err != nil {
+			log.Println("Database error:", err)
 			http.Error(w, "Query failed", 500)
 			return
 		}
