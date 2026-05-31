@@ -8,7 +8,7 @@ function App() {
   useEffect(() => {
     const fetchDishes = async () => {
       try {
-        const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8080';
+        const apiUrl = import.meta.env.VITE_API_URL || 'https://devopsfinal-4zx3.onrender.com';
         const res = await fetch(`${apiUrl}/api/dishes`);
         if (!res.ok) throw new Error('Failed to fetch');
         const data = await res.json();
