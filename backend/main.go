@@ -49,9 +49,37 @@ func main() {
 
 	http.HandleFunc("/api/dishes", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Access-Control-Allow-Origin", "*")
-		w.Header().Set("Content-Type", "application/json")
+		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+		w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
 
-		rows, err := db.Query("SELECT id, name, description FROM dishes")
+		if r.Method == "OPTIONS" {
+			w.WriteHeader(http.StatusOK)
+			return
+		}
+
+		if r.Method == "POST" {
+			var d Dish
+			if err := json.NewDecoder(r.Body).Decode(&d); err != nil {
+				http.Error(w, err.Error(), http.StatusBadRequest)
+				return
+			}
+
+			err := db.QueryRow("INSERT INTO dishes (name, description) VALUES ($1, $2) RETURNING id", d.Name, d.Description).Scan(&d.ID)
+			if err != nil {
+				log.Println("Insert error:", err)
+				http.Error(w, "Lỗi khi lưu món ăn", http.StatusInternalServerError)
+				return
+			}
+
+			w.Header().Set("Content-Type", "application/json")
+			w.WriteHeader(http.StatusCreated)
+			json.NewEncoder(w).Encode(d)
+			return
+		}
+
+		// Xử lý GET mặc định
+		w.Header().Set("Content-Type", "application/json")
+		rows, err := db.Query("SELECT id, name, description FROM dishes ORDER BY id DESC")
 		if err != nil {
 			log.Println("Database error:", err)
 			http.Error(w, "Query failed", 500)
