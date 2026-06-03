@@ -21,9 +21,9 @@ func main() {
 	if dbUrl == "" {
 		dbUrl = "postgresql://neondb_owner:npg_OJhbeoAUL3z1@ep-winter-hat-apac7jra.c-7.us-east-1.aws.neon.tech/neondb?sslmode=require"
 	}
-	
+
 	log.Println("Đang kết nối tới DB bằng chuỗi:", dbUrl)
-	
+
 	db, err := sql.Open("postgres", dbUrl)
 	if err != nil {
 		log.Fatal("Lỗi mở kết nối:", err)
@@ -34,7 +34,7 @@ func main() {
 	if err != nil {
 		log.Println("CẢNH BÁO: Không thể PING tới Database! Lỗi:", err)
 	} else {
-		log.Println("✅ Đã kết nối thành công tới PostgreSQL!")
+		log.Println("✅ Đã kết nối thành công tới PostgreSQL của Huy!")
 	}
 
 	http.HandleFunc("/api/health", func(w http.ResponseWriter, r *http.Request) {
