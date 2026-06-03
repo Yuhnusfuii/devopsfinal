@@ -67,7 +67,7 @@ function App() {
       <div className="background-glow"></div>
       <div className="App">
         <header>
-          <h1>Tinh Hoa Ẩm Thực</h1>
+          <h1>Tinh Hoa Ẩm Thực 11</h1>
           <p className="subtitle">Khám phá hương vị truyền thống Việt Nam</p>
         </header>
 
