@@ -34,7 +34,7 @@ func main() {
 	if err != nil {
 		log.Println("CẢNH BÁO: Không thể PING tới Database! Lỗi:", err)
 	} else {
-		log.Println("✅ Đã kết nối thành công tới PostgreSQL của Huy!")
+		log.Println("✅ Đã kết nối thành công tới PostgreSQL!")
 	}
 
 	http.HandleFunc("/api/health", func(w http.ResponseWriter, r *http.Request) {
